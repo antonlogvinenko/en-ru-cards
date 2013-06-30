@@ -1,6 +1,6 @@
-(ns en-ru-cards.core)
+(ns en-ru-cards.core
+  (:gen-class :main true)
+  (:use [en-ru-cards.schedule]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn -main [period storage vocabulary]
+  (run period vocabulary storage))

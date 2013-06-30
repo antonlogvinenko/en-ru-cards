@@ -30,7 +30,7 @@
 
 (defn create-tweet-for-word [word]
   (try
-    (let [prefix-length (+ 3 (count word))
+    (let [prefix-length (+ 2 (count word))
           article (get-article word)
           translation (->> 30
                            (range 1)
@@ -38,5 +38,5 @@
                            (map (partial get-translation article word))
                            (filter #(< (count %) (- 140 prefix-length)))
                            first)]
-      (str (.toUpperCase word) ": " translation "."))
+      (str word ": " translation))
     (catch RuntimeException e nil)))
