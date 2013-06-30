@@ -3,9 +3,7 @@
         [clojure.string :only (split)]))
 
 (defn is-bad-word [word]
-  (->> "'"
-       (.contains word)
-       not))
+  (->> "'" (.contains word) not))
 
 (defn read-vocabulary [file]
   (with-open [rdr (reader file)]

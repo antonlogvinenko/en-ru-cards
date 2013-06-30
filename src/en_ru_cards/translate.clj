@@ -29,12 +29,14 @@
        validate))
 
 (defn create-tweet-for-word [word]
-  (let [prefix-length (+ 3 (count word))
-        article (get-article word)
-        translation (->> 30
-                         (range 1)
-                         reverse
-                         (map (partial get-translation article word))
-                         (filter #(< (count %) (- 140 prefix-length)))
-                         first)]
-    (str (.toUpperCase word) ": " translation ".")))
+  (try
+    (let [prefix-length (+ 3 (count word))
+          article (get-article word)
+          translation (->> 30
+                           (range 1)
+                           reverse
+                           (map (partial get-translation article word))
+                           (filter #(< (count %) (- 140 prefix-length)))
+                           first)]
+      (str (.toUpperCase word) ": " translation "."))
+    (catch RuntimeException e nil)))
