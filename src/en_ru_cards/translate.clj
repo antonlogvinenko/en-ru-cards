@@ -3,12 +3,9 @@
         [clojure.string :only [split]])
   (:require [clojure.data.json :as json]))
 
-(defn debug [x] (println x) x)
-
 (def url "http://glosbe.com/gapi/translate?from=eng&dest=rus&format=json&pretty=true&phrase=")
 
 (defn validate [translation]
-  (println translation)
   (if (empty? translation)
     (-> "Not translated" RuntimeException. throw)
     translation))
