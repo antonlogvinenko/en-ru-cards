@@ -12,6 +12,7 @@
          (filter is-bad-word)
          (map #(split % #" "))
          (map first)
+         (drop 1000)
          vec)))
 
 (defn random-word [vocab exclude]

@@ -5,20 +5,20 @@
         [en-ru-cards.frequency])
   (:require [cronj.core :as cj]))
 
-(defn get-word-and-tweet [storage vocabulary]
+(defn get-word-and-translation [storage vocabulary]
   (let [word (random-word vocabulary storage)
-        tweet (create-tweet-for-word word)]
+        translation (get-translation word)]
     (if (nil? tweet)
       (get-word-and-tweet vocabulary storage)
-      [word tweet])))
+      [word translation])))
 
 (defn tweet-new-card [dt {storage-file :storage-file vocabulary-file :vocabulary-file}]
   (let [storage (load-storage storage-file)
         vocabulary (read-vocabulary vocabulary-file)
-        [word message] (get-word-and-tweet storage vocabulary)]
-    (println message)
+        [word translation] (get-word-and-translation storage vocabulary)]
+    (println word translation)
     (store storage-file storage word)
-    (tweet message)))
+    (tweet (str word " " translation))))
 
 (defn run [period vocabulary-file storage-file]
   (cj/defcronj hn

@@ -1,42 +1,24 @@
 (ns en-ru-cards.translate
   (:use [clojure.java.shell]
         [clojure.string :only [split]])
-  (:require [clojure.data.json :as json]))
+  (:require [clojure.data.json :as json])
+  (:import [java.nio.charset Charset]))
 
-(def url "http://glosbe.com/gapi/translate?from=eng&dest=rus&format=json&pretty=true&phrase=")
+(def url "https://www.googleapis.com/language/translate/v2?key=AIzaSyC3JN8PuA_gS7Jj_XSJv1fyb1UxmlSKl6s&source=en&target=ru&q=")
 
-(defn validate [translation]
-  (if (empty? translation)
-    (-> "Not translated" RuntimeException. throw)
-    translation))
+(defn validate [word translation]
+  (cond
+   (= word translation) nil
+   (nil? translation) nil
+   :else (String. (.getBytes translation) (Charset/forName "UTF-8"))))
 
-(defn get-article [word]
+(defn get-translation [word]
   (->> word
        (str url)
        slurp
-       json/read-json))
-
-(defn get-translation [article word n]
-  (->> article
-       :tuc
-       (map :phrase)
-       (filter #(= (:language %) "rus"))
-       (map :text)
-       (filter (comp not nil?))
-       (take n)
-       (interpose ", ")
-       (apply str)
-       validate))
-
-(defn create-tweet-for-word [word]
-  (try
-    (let [prefix-length (+ 2 (count word))
-          article (get-article word)
-          translation (->> 30
-                           (range 1)
-                           reverse
-                           (map (partial get-translation article word))
-                           (filter #(< (count %) (- 140 prefix-length)))
-                           first)]
-      (str word ": " translation))
-    (catch RuntimeException e nil)))
+       json/read-json
+       :data
+       :translations
+       first
+       :translatedText
+       (validate word)))
