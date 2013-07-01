@@ -10,12 +10,29 @@
   (cond
    (= word translation) nil
    (nil? translation) nil
-   :else (String. (.getBytes translation) (Charset/forName "UTF-8"))))
+   :else translation))
+
+(defn my-slurp [url]
+  (slurp url :encoding "UTF-8"))
+
+(defn from-braces [word]
+  (-> word (split #"\[") second (split #"\]") first))
+
+(defn get-transcription [word]
+  (let [lines (-> (sh "sdcv" "--utf8-output" "-n"
+                "--data-dir" "/Users/anton/Downloads/stardict-ER-LingvoUniversal-2.4.2/" word)
+                  :out
+                  (split #"\n"))]
+    (->> lines
+         (filter #(.contains % "["))
+         first
+         from-braces
+         )))
 
 (defn get-translation [word]
   (->> word
        (str url)
-       slurp
+       my-slurp
        json/read-json
        :data
        :translations

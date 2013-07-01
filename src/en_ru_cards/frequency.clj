@@ -1,15 +1,18 @@
 (ns en-ru-cards.frequency
   (:use [clojure.java.io :only (reader)]
-        [clojure.string :only (split)]))
+        [clojure.string :only (split)]
+        [clojure.java.shell]))
 
-(defn is-bad-word [word]
-  (->> "'" (.contains word) not))
+(defn is-good-word [word]
+  (or
+   (->> "'" (.contains word) not)
+   (->> "s" (.endsWith word) not)))
 
 (defn read-vocabulary [file]
   (with-open [rdr (reader file)]
     (->> rdr
          line-seq
-         (filter is-bad-word)
+         (filter is-good-word)
          (map #(split % #" "))
          (map first)
          (drop 1000)
