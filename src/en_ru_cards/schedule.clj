@@ -26,7 +26,7 @@
                :opts {:storage-file storage-file
                       :vocabulary-file vocabulary-file}
                :handler tweet-new-card
-               :schedule (str "0 0 /" period " * * * *")
+               :schedule (str "* " "/" period " * * * * *")
                }])
   (cj/start! hn))
 
