@@ -9,7 +9,7 @@
   (let [word (random-word vocabulary storage)
         translation (get-translation word)]
     (if (nil? tweet)
-      (get-word-and-tweet vocabulary storage)
+      (get-word-and-translation vocabulary storage)
       [word translation])))
 
 (defn tweet-new-card [dt {storage-file :storage-file vocabulary-file :vocabulary-file}]
